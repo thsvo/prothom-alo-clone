@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #111111;
+  --prothom-red: #e31e24; /* More vibrant red */
+  --prothom-red-dark: #b91c1c;
+  --border-gray: #f1f1f1;
+  --text-secondary: #4b5563;
+  --text-dim: #9ca3af;
+  --accent-blue: #1e90ff;
+  
+  /* Premium Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-premium: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand-red: var(--prothom-red);
+  --color-brand-red-dark: var(--prothom-red-dark);
+  --color-brand-gray: var(--border-gray);
+  --color-text-dim: var(--text-secondary);
+  --color-text-muted: var(--text-dim);
+  --color-accent-blue: var(--accent-blue);
+  
+  --font-sans: var(--font-noto-sans-bengali), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-noto-serif-bengali), ui-serif, Georgia, serif;
+  
+  --shadow-premium: var(--shadow-premium);
+}
+
+@layer base {
+  body {
+    @apply bg-[#fcfcfc] text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
+  }
+
+  /* Smooth selection */
+  ::selection {
+    @apply bg-brand-red/10 text-brand-red;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/80 backdrop-blur-md border-b border-white/20;
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+}
