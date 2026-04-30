@@ -45,7 +45,7 @@ export async function getPosts(options = {}) {
       };
 
       if (categoryId) where.categoryId = categoryId;
-      if (section) where.section = section;
+      if (section) where.section = section.toUpperCase();
       if (location) {
         where.location = { contains: location, mode: 'insensitive' };
       }
