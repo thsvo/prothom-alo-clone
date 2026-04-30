@@ -45,6 +45,20 @@ export default function CategoriesPage() {
     }
   };
 
+  const handleDelete = async (id, name) => {
+    if (!confirm(`Are you sure you want to delete category "${name}"?`)) return;
+    try {
+      const res = await fetch(`/api/categories/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to delete category');
+      }
+      fetchCategories();
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div>
@@ -127,7 +141,10 @@ export default function CategoriesPage() {
                     <td className="px-6 py-4 text-sm text-slate-500 font-mono">{cat.slug}</td>
                     <td className="px-6 py-4 text-sm text-slate-500">-</td>
                     <td className="px-6 py-4 text-right">
-                      <button className="text-slate-400 hover:text-red-600 transition-colors p-2">
+                      <button 
+                        onClick={() => handleDelete(cat.id, cat.name)}
+                        className="text-slate-400 hover:text-red-600 transition-colors p-2"
+                      >
                         <Trash2 size={18} />
                       </button>
                     </td>
@@ -141,3 +158,4 @@ export default function CategoriesPage() {
     </div>
   );
 }
+

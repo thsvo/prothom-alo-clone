@@ -86,9 +86,12 @@ export async function GET(req) {
       where.location = { contains: location, mode: 'insensitive' };
     }
 
+    const sortField = searchParams.get('sortField') || 'order';
+    const sortOrder = searchParams.get('sortOrder') || 'asc';
+
     const posts = await prisma.post.findMany({
       where,
-      orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+      orderBy: [{ [sortField]: sortOrder }, { createdAt: 'desc' }],
       take: limit,
       include: {
         category: true,
@@ -134,6 +137,21 @@ export async function POST(req) {
     }
 
     const tagIds = Array.isArray(data.tagIds) ? data.tagIds.filter(Boolean) : [];
+    const section = toPrismaSection(data.section) || 'STANDARD';
+    const order = Number.isFinite(data.order) ? data.order : 99;
+
+    // Shift existing posts if the order is already taken or we want to insert at this position
+    if (order < 99) {
+      await prisma.post.updateMany({
+        where: {
+          section: section,
+          order: { gte: order },
+        },
+        data: {
+          order: { increment: 1 },
+        },
+      });
+    }
 
     const post = await prisma.post.create({
       data: {
@@ -145,8 +163,8 @@ export async function POST(req) {
         location: data.location?.trim() || null,
         categoryId: data.category,
         status: toPrismaStatus(data.status),
-        section: toPrismaSection(data.section) || 'STANDARD',
-        order: Number.isFinite(data.order) ? data.order : 99,
+        section: section,
+        order: order,
         isBreaking: Boolean(data.isBreaking),
         scheduledAt: null,
         publishedAt: toPrismaStatus(data.status) === 'PUBLISHED' ? new Date() : null,

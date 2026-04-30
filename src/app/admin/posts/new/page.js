@@ -36,6 +36,18 @@ export default function NewPost() {
       });
   }, []);
 
+  useEffect(() => {
+    // Fetch max order for selected section
+    fetch(`/api/posts?section=${formData.section}&limit=1&sortField=order&sortOrder=desc`)
+      .then(res => res.json())
+      .then(posts => {
+        const maxOrder = posts.length > 0 ? Number(posts[0].order) : 0;
+        setFormData(prev => ({ ...prev, order: isNaN(maxOrder) ? 1 : maxOrder + 1 }));
+      });
+  }, [formData.section]);
+
+
+
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;

@@ -95,3 +95,23 @@ export async function PATCH(req, { params }) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+export async function DELETE(_req, { params }) {
+  try {
+    const me = await getCurrentUser();
+    if (!me || me.role !== "ADMIN") {
+      return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+    }
+
+    const { id } = await params;
+    if (id === me.id) {
+      return NextResponse.json({ error: "You cannot delete yourself." }, { status: 400 });
+    }
+
+    await prisma.user.delete({ where: { id } });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+

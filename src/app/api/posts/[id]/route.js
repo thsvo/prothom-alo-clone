@@ -52,6 +52,27 @@ export async function PATCH(req, { params }) {
     const { id } = await params;
     const data = await req.json();
     const tagIds = Array.isArray(data.tagIds) ? data.tagIds.filter(Boolean) : null;
+    const newSection = toPrismaSection(data.section);
+    const newOrder = Number.isFinite(data.order) ? data.order : undefined;
+
+    // Shift existing posts if the order is changed
+    if (newOrder !== undefined && newOrder < 99) {
+      const currentPost = await prisma.post.findUnique({ where: { id } });
+      const section = newSection || currentPost.section;
+      
+      if (currentPost.order !== newOrder || currentPost.section !== newSection) {
+        await prisma.post.updateMany({
+          where: {
+            id: { not: id },
+            section: section,
+            order: { gte: newOrder },
+          },
+          data: {
+            order: { increment: 1 },
+          },
+        });
+      }
+    }
 
     const updated = await prisma.post.update({
       where: { id },
@@ -69,8 +90,8 @@ export async function PATCH(req, { params }) {
               : undefined,
         categoryId: data.category || undefined,
         status: toPrismaStatus(data.status),
-        section: toPrismaSection(data.section),
-        order: Number.isFinite(data.order) ? data.order : undefined,
+        section: newSection,
+        order: newOrder,
         isBreaking: typeof data.isBreaking === "boolean" ? data.isBreaking : undefined,
         scheduledAt: null,
         publishedAt:
@@ -105,3 +126,16 @@ export async function PATCH(req, { params }) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+export async function DELETE(_req, { params }) {
+  try {
+    const { id } = await params;
+    await prisma.post.delete({
+      where: { id },
+    });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
