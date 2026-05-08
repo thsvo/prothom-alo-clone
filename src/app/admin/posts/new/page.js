@@ -10,7 +10,7 @@ export default function NewPost() {
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
@@ -25,6 +25,7 @@ export default function NewPost() {
     ,
     tagIds: []
   });
+
 
   useEffect(() => {
     Promise.all([fetch('/api/categories'), fetch('/api/tags')])
@@ -105,14 +106,14 @@ export default function NewPost() {
           <p className="text-slate-500">Fill in the details to publish a new news article.</p>
         </div>
         <div className="flex gap-3">
-          <button 
+          <button
             onClick={() => router.back()}
             className="px-4 py-2 border border-gray-300 rounded-lg text-slate-600 hover:bg-gray-50 transition-colors flex items-center gap-2"
           >
             <X size={18} />
             Cancel
           </button>
-          <button 
+          <button
             form="post-form"
             disabled={loading}
             className="px-6 py-2 bg-brand-red text-white rounded-lg font-bold hover:bg-red-700 transition-colors flex items-center gap-2 shadow-lg shadow-red-200 disabled:opacity-50"
@@ -129,36 +130,36 @@ export default function NewPost() {
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Headline (Bengali or English)</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 required
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-red focus:ring-2 focus:ring-red-100 outline-none transition-all text-xl font-bold"
                 placeholder="Enter news title..."
                 value={formData.title}
-                onChange={(e) => setFormData({...formData, title: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               />
             </div>
 
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Excerpt (Summary)</label>
-              <textarea 
+              <textarea
                 rows="3"
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-red focus:ring-2 focus:ring-red-100 outline-none transition-all text-slate-600"
                 placeholder="Brief summary for list views..."
                 value={formData.excerpt}
-                onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
               />
             </div>
 
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Main Content</label>
-              <textarea 
+              <textarea
                 rows="15"
                 required
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-red focus:ring-2 focus:ring-red-100 outline-none transition-all text-slate-700 font-serif leading-relaxed text-lg"
                 placeholder="Write your news story here..."
                 value={formData.content}
-                onChange={(e) => setFormData({...formData, content: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               />
             </div>
           </div>
@@ -196,10 +197,10 @@ export default function NewPost() {
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-5">
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Category</label>
-              <select 
+              <select
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none focus:border-brand-red transition-all"
                 value={formData.category}
-                onChange={(e) => setFormData({...formData, category: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               >
                 {categories.map(cat => (
                   <option key={cat.id} value={cat.id}>{cat.name}</option>
@@ -237,7 +238,7 @@ export default function NewPost() {
                 type="text"
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none focus:border-brand-red transition-all"
                 value={formData.location}
-                onChange={(e) => setFormData({...formData, location: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                 placeholder="যেমন: ঢাকা, চট্টগ্রাম, খুলনা"
                 list="bd-districts"
               />
@@ -250,10 +251,10 @@ export default function NewPost() {
 
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Section</label>
-              <select 
+              <select
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none focus:border-brand-red transition-all"
                 value={formData.section}
-                onChange={(e) => setFormData({...formData, section: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, section: e.target.value })}
               >
                 <option value="standard">Standard News</option>
                 <option value="top">Top Story (Center)</option>
@@ -264,11 +265,11 @@ export default function NewPost() {
 
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Sort Order (1 = Top)</label>
-              <input 
-                type="number" 
+              <input
+                type="number"
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none focus:border-brand-red transition-all"
                 value={formData.order}
-                onChange={(e) => setFormData({...formData, order: parseInt(e.target.value)})}
+                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
               />
               <p className="text-[10px] text-slate-400 mt-1">Order 1 in &quot;Top Story&quot; will be the main center news.</p>
             </div>
